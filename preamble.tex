@@ -179,6 +179,99 @@
   \end{tikzpicture}}%
 }
 
+% ------------------------- 封面与 bjr 标识（2026-11-19 加） -------------------------
+% 人大红：取通行的近似色值 #AE0B2A（RGB 174,11,42）。若拿到校方 VI 手册的标准色值，
+% 只改下面这一行，标识与封面随之更新。
+\definecolor{rucred}{HTML}{AE0B2A}
+\definecolor{coverink}{HTML}{2B2B2B}
+
+% bjr 标识：圆角方底上三个单线小写字母 b、j、r；j 的点同时是一条向下倾斜的需求曲线与
+% 一条向上倾斜的供给曲线的交点（均衡点），取「经济学」之意。本标识为讲义自行设计，
+% 只取人大红这一颜色，不含也不仿照任何学校徽志。
+% 坐标为 64x64 画布（单位 pt）；全部用路径绘制，不依赖字体。
+% 用法：\bjrmark 或 \bjrmark[0.6]（红底白字）；\bjrmarkrev[0.6]（白底红字，放在红色底上用）。
+\newcommand{\bjrmarkdraw}[3]{% #1 缩放, #2 底色, #3 字色
+  \scalebox{#1}{%
+  \begin{tikzpicture}[x=1pt, y=1pt,
+      bjrglyph/.style={draw=#3, line width=4.6pt, line cap=round, line join=round},
+      bjrcurve/.style={draw=#3, line width=1.8pt, line cap=round, opacity=0.5}]
+    \fill[#2, rounded corners=13pt] (0,0) rectangle (64,64);
+    % 需求曲线（左上到右下）与供给曲线（左下到右上），交于 j 的点 (38,43)
+    \path[bjrcurve] (23,57) .. controls (27,50) and (32,45.5) .. (38,43)
+                            .. controls (43,41) and (47,40) .. (51,39.2);
+    \path[bjrcurve] (26,39) .. controls (30,39.6) and (34,41) .. (38,43)
+                            .. controls (44,46.5) and (50,51.5) .. (55,57.5);
+    % b：竖笔加圆腹
+    \path[bjrglyph] (12,17) -- (12,48);
+    \path[bjrglyph] (20.5,25.5) circle (8.5);
+    % j：竖笔带左钩；点即均衡点
+    \path[bjrglyph] (38,34) -- (38,14) arc[start angle=0, end angle=-90, radius=6.5];
+    \fill[#3] (38,43) circle (3.6pt);
+    % r：竖笔加肩
+    \path[bjrglyph] (48,34) -- (48,17);
+    \path[bjrglyph] (48,26) .. controls (48,31.5) and (52,34.5) .. (56.5,33);
+  \end{tikzpicture}}%
+}
+\newcommand{\bjrmark}[1][1]{\bjrmarkdraw{#1}{rucred}{white}}
+\newcommand{\bjrmarkrev}[1][1]{\bjrmarkdraw{#1}{white}{rucred}}
+
+% 封面：上部人大红色块（标识、书名），色块右侧以淡白线画 long-run 包络线与三条
+% short-run 曲线（本讲义第一部分的核心图，也是微观经济学里长期与短期曲线的经典画法）；
+% 下部白底放副题与署名。用 remember picture + overlay 定位，需编译两遍（latexmk 与
+% Overleaf 均自动处理）。在 main.tex 的 \frontmatter 之后调用 \bjrcover。
+\newcommand{\bjrcover}{%
+  \begin{titlepage}
+  \thispagestyle{empty}
+  \begin{tikzpicture}[remember picture, overlay]
+    \coordinate (blockSW) at ([yshift=-0.43\paperheight]current page.north west);
+    \coordinate (blockSE) at ([yshift=-0.43\paperheight]current page.north east);
+    \fill[rucred] (current page.north west) rectangle (blockSE);
+    % 淡白线：long-run 包络线与三条在各自 climate 处相切的 short-run 曲线
+    \begin{scope}
+      \clip (current page.north west) rectangle (blockSE);
+      \begin{scope}[shift={([xshift=0.45\paperwidth, yshift=58mm]blockSW)},
+                    x=0.115\paperwidth, y=13mm, white, line cap=round]
+        \draw[line width=2.4pt, opacity=0.22]
+          plot[domain=0:4, samples=80] (\x, {4*\x-\x*\x});
+        \foreach \m in {1,2,3}
+          \draw[line width=1.3pt, opacity=0.22, dash pattern=on 5pt off 4pt]
+            plot[domain={\m-1.05}:{\m+1.05}, samples=50] (\x, {4*\x-\x*\x-(\x-\m)*(\x-\m)});
+        \foreach \m/\y in {1/3, 2/4, 3/3} \fill[opacity=0.38] (\m,\y) circle (2.6pt);
+      \end{scope}
+    \end{scope}
+    % 标识（白底红字）
+    \node[anchor=north west, inner sep=0] at ([xshift=28mm, yshift=-27mm]current page.north west)
+      {\bjrmarkrev[0.95]};
+    % 书名与英文副题
+    \node[anchor=south west, inner sep=0, text=white] at ([xshift=27.2mm, yshift=24mm]blockSW)
+      {\heiti\fontsize{37}{44}\selectfont 经济学论文精读讲义};
+    \node[anchor=south west, inner sep=0, text=white, opacity=0.88] at ([xshift=28mm, yshift=14mm]blockSW)
+      {\sffamily\bfseries\fontsize{9.5}{12}\selectfont
+       E\,C\,O\,N\,O\,M\,I\,C\ \ \,L\,I\,T\,E\,R\,A\,T\,U\,R\,E\ \ \,·\ \ \,R\,E\,A\,D\,I\,N\,G\ \ \,N\,O\,T\,E\,S};
+    % 下部白底：副题
+    \node[anchor=north west, inner sep=0, text=coverink, align=left] at ([xshift=28mm, yshift=-17mm]blockSW)
+      {\songti\zihao{4} 按领域梳理研究脉络：方法的发展与重点发现\\[7pt]
+       \zihao{-4}\color{black!55} 讲清识别\quad·\quad 讲清取舍\quad·\quad 讲清测度};
+    % 署名
+    \draw[rucred, line width=1.6pt] ([xshift=28mm, yshift=47mm]current page.south west) -- ++(24mm,0);
+    \node[anchor=north west, inner sep=0, text=coverink, align=left] at ([xshift=28mm, yshift=41mm]current page.south west)
+      {\sffamily\bfseries\zihao{3} bjr\\[5pt]
+       \songti\zihao{-4}\color{black!55} Sagewood AI Lab\quad·\quad \the\year~年~\the\month~月};
+  \end{tikzpicture}
+  \end{titlepage}%
+}
+
+% ------------------------- 无空白页（openany 下） -------------------------
+% book 类的 \frontmatter 与 \mainmatter 无条件执行 \cleardoublepage，即使用了 openany，
+% 目录止于奇数页时也会在正文前插入一张空白页。未用 openright 时改为 \clearpage；
+% 付印改回 openright 后本段自动失效，恢复标准行为。
+\makeatletter
+\if@openright\else
+  \renewcommand{\frontmatter}{\clearpage\@mainmatterfalse\pagenumbering{roman}}
+  \renewcommand{\mainmatter}{\clearpage\@mainmattertrue\pagenumbering{arabic}}
+\fi
+\makeatother
+
 % ------------------------- 数学记号 -------------------------
 % 全书级记号在此登记; 各章可沿用所读论文的原始记号(首用处说明),
 % 新造全书级记号前先查本块避免冲突, 新约定要登记进这里。

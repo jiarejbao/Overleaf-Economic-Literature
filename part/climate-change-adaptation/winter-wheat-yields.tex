@@ -1,59 +1,285 @@
-\chapter{Application1: Climate change and winter wheat yields: the role of freezing days and long-run adaptations}
+% 精读章（应用篇，本 part 的 Application 1；编号的出现位置见 main.tex 本 part 的注释）:
+%         Da, Xu, Yi & McCarl, Climate Change and Winter Wheat Yields:
+%         The Roles of Freezing Days and Long-Run Adaptations (ERAE 2024)
+% 原文出处: doi:10.1093/erae/jbae015（所据版本：期刊已刊版，European Review of
+%          Agricultural Economics 51(3): 815--843；本仓 papers/01_methods/ 下
+%          2024-ERAE-*.pdf 为团队正典，本章页码引注均指该版）
+% 版本注记: 论文的 Appendix A1（climate penalty 模型的数学说明）、A2（climate 趋势
+%          份额的计算）、A3（robustness check 细节）与 Supplementary Tables/Figures
+%          属期刊网站的在线补充材料，本仓未收；正文凡涉及处只转述已刊正文的说法，
+%          并标「待补」。
+% 体例注记: 正文中的 terms/expressions 一律用英文原词，定义处随文给中文对照并登记
+%          英文 \index；按「先 identification 再反推 assumption」组织模型一节。
+% 建档/更新日期由章首 \chdate 渲染（grep: chdate）
+% 主笔: bjr；提纲: 2026-11-11（bjr）；据提纲起草: 2026-11-19（Claude 协助起草，
+%       bjr 审订前稿）。提纲里的三张卡片已分别写成直觉~/易错点盒子：
+%       「四个变量之和是否完全共线」「best fit 的拟合准则」「trending historical climate」。
+% partinfo 定位: climate penalty model 在中国作物单产上的应用——用同一回归分出
+%               long-run 与 short-run response，并显示 Spring freezing 变量如何改变
+%               影响评估的符号；见 \chref{ch:info-climate-change-adaptation} 的
+%               方法线（panel 线末站的应用）与速查表。
 
-\timestamp{2026-11-11}{2026-11-11}
+% 章题仍用论文标题；可选参数是目录条目，带应用篇编号
+\chapter[Application 1：Climate Change and Winter Wheat Yields: The Roles of Freezing Days and Long-Run Adaptations（Da et al.，ERAE 2024）]{Climate Change and Winter Wheat Yields: The Roles of Freezing Days and Long-Run Adaptations（Da et al.，ERAE 2024）}
+\label{ch:da-et-al-2024}
+% 章题过长，页眉用短题（preamble 的 \chaptermark 经 \markboth 排页眉）
+\chaptermark{Application 1：Climate Change and Winter Wheat Yields（Da et al.，2024）}
+\chdate{2026-11-11}{2026-11-19}
 
-\section{这篇文章在说什么}
-本论文在估计 climate change impacts on Chinese winter wheat yields的过程中使用了season-specific climate variables和climate penalty mode，得出了两个结论：1、在实证估计中纳入季节性变量是必要的，本研究中Spring freezing days的effects与传统估计完全不同；2、长期适应行为欸也会对climate change effect产生缩小甚至逆转的效果。
+\section{这篇论文在说什么}
 
-\section{数据来源}
-\subsection{数据规模：region \times period}
-\subsection{yield data}
-\subsection{climate data}
+一句话概括：论文在中国黄淮海冬小麦主产区的县级面板上，先按季节（Fall、Winter、Spring）用数据选定温度阈值、构造 season-specific 的 degree-days 变量，再用 \chref{ch:merel-gammans-2021} 的 climate penalty model 在同一回归里分出 long-run 与 short-run response。它给出两条结论，摘要原句是：``We find that Spring freezing days are critical as we estimate small yield gains when considering a reduction in the number of freezing days (induced by global warming), as opposed to large yield losses when such effects are omitted. We also find substantial influences of adaptation effects that could reverse the sign of climate change impacts''\citep[第~815 页]{da2024climate}。
 
-\section{temperature thresholds estimate}
-Step1: Seasonal division
+它在 partinfo 里的坐标：本 part 的 Application 1，即方法线 panel line 第三站 climate penalty approach 的第一篇应用（\chref{ch:info-climate-change-adaptation}）。\chref{ch:merel-gammans-2021} 讲的是这套设定为什么成立，本章看它搬到一个新的作物、新的国家之后，变量怎么构造、哪些 penalty term 留得住、估计结果怎么用于 projection。精读它的理由有两条：其一，它把「测度」的分量摆得很重，同一批数据只因是否纳入 freezing 变量，projection 的符号就相反；其二，它如实报告了 penalty term 全部加入后出现的反常符号，这是照搬 climate penalty model 时最容易遇到的情形。
 
-Step2: Variables construction
-figure 1
+骨架表（所据版本：ERAE 51(3) 已刊版；页码为期刊页码）：
 
-\begin{card}
-    Question1: sum of four variables in given one season is constant，似乎会出现完全共线性问题？
-    这就是为什么这里使用的是degree variables而不是bin variables，degree variables可以避免完全共线性问题。
-\end{card}
+\begin{table}[htbp]
+\centering\small
+\begin{tabular}{@{}p{5.6cm}p{1.6cm}p{5.8cm}@{}}
+\toprule
+原文章节 & 页码 & 讲什么 \\
+\midrule
+Abstract、1 Introduction & 815--818 & 两个问题（季节性、long-run adaptation）与三条贡献 \\
+2 Data collection & 818--821 & 研究区域、单产数据、climate 数据与 degree-days 的构造（Figure~1） \\
+3 Empirically estimating temperature thresholds & 821--823 & 三季划分、阈值的数据驱动选取（Table~1） \\
+4 The estimation model & 823--827 & 4.1 conventional fixed effects 面板（式 (1)）；4.2 climate penalty model（式 (2)(3)）与 stationarity 条件 \\
+5 Empirical results & 827--836 & 5.1 conventional 估计（Figure~2、Table~2 第 1 列）；5.2 样本外比较与 robustness check；5.3 penalty 设定（Table~2 第 2、3 列）；5.4、5.5 projection（Figure~4、5） \\
+6 Conclusion & 836--837 & 结论与三条局限 \\
+Appendix A1--A3（在线补充材料） & 本仓未收 & penalty 模型的数学说明、climate 趋势份额、robustness check 细节 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-Step3: Range loop
-table 1
+\section{预备知识}
 
-\begin{card}
-    "pick the one which has the best fit"
+两件预备知识。其一是冬小麦的生育期，属农学知识，论文在第~816--817 页脚注~1 交代：冬小麦在 9、10 月播种，次年 5、6 月收获，生育期跨三个季节。Fall 是营养生长期（出苗与分蘖），对高温敏感；Winter 植株休眠，对 weather 大体不敏感，但这一阶段完成从营养生长向生殖生长的转变，且冬季偏暖会使小麦提前解除休眠，更易受早春霜冻损害；Spring 恢复生长，依次拔节、孕穗、开花，这些过程对温度敏感。同样的 1\,$^\circ$C 升温落在不同季节，对单产的含义因此不同，这是论文坚持分季节构造变量的农学依据。
 
-    What's the fit function? 论文正文中并没有，从Appendix或者reference中寻找补充到此处。
-\end{card}
+其二是两件前面章节已讲过的工具。degree-days 的定义见 \chref{ch:deschenes-greenstone-2007} 的数据节；climate penalty model 的 DGP、short-run 与 long-run response 的定义、以及 naive 面板系数的偏差分解，见 \chref{ch:merel-gammans-2021}。本章沿用所读论文的记号，与该章记号不同之处在首用处说明。
 
-\section{The estimate model}
-\subsection{The conventional fixed effects panel data model}
-equation (1) in paper，有seasonal variables，只是没有添加climate penalty terms
+\section{数据与测度}
 
-\subsection{The climate penalty model}
-A simple climate penalty model: equation (2) in paper
+\subsection{数据规模：region $\times$ period}
 
-how to interpret coefficients: \beta_1 代表 long-response， (\beta_1, \beta_2)代表 short-response。
+研究区域是华北平原内的一个子区域（即黄淮海平原，第~819 页脚注~2），覆盖河北南部、河南大部、山东全境以及安徽与江苏北部，该区域生产了中国 70\% 以上的冬小麦（第~819 页）。论文选它有两条理由（第~819 页）：生育期（10 月至次年 5 月）与种植制度（冬小麦接夏玉米）大体一致；降水多于华北平原北部，冬小麦以雨养或少灌为主，在一定程度上回避了灌溉问题。面板是县 $\times$ 年：1981--2015 年共 35 年；剔除单产观测不足 10 年的 5 个县之后，留下 352 个县、8{,}867 个县年观测（第~819 页）。这是一个非平衡面板：若 352 个县在 35 年里都有观测，应有 $352\times35=12{,}320$ 个县年，实际观测约占 72\%（本讲义推算，依据即上述三个数字）。
 
-\begin{card}
-    Trending Historical change，将Appendix中的内容补充到这里。
-\end{card}
+\subsection{Yield data}
 
-\section{Empirical results}
-Table 2
-\subsection{Column 1: Conventional panel approach}
-解释系数，并强调这些系数是long-response.
+县级冬小麦单产（吨／公顷）来自中国农业科学院农业信息研究所，覆盖 1981--2015 年（第~819 页）；回归中的被解释变量 $y_{it}$ 是单产的对数（第~824 页）。
 
-\subsection{COlumn 2/3: Panel approaches with climate penalty terms}
-解释系数，
-contrast with Column1
-Interesting findings and interprations
+\subsection{Climate data}
+
+温度与降水各有一个来源（第~819--820 页）。温度用 China Meteorological Data Service Center（CMDC）的逐日最低、最高温度，原始数据是 $0.5^\circ\times0.5^\circ$ 格点；县级值按格点落在县内的面积加权平均。论文再用 R 包 chillR 的 \texttt{stack\_hourly\_temps} 函数把县级逐日最低、最高温度插值成逐小时温度（第~819 页脚注~3），由逐小时温度构造 degree-days：``when using a threshold of 25$^\circ$C, then 1 h of 30$^\circ$C temperature contributes to 5 degree-hours, which we convert to degree-days by dividing it by 24''\citep[第~819 页]{da2024climate}。降水用 China Meteorological Forcing Dataset 的月度数据（$0.5^\circ\times0.5^\circ$ 格点），同法聚合到县，再按 Fall、Winter、Spring 三季加总（第~820 页）。
+
+两处口径选择论文作了交代。第一，处理顺序是先空间聚合（格点到县）、后时间插值（逐日到逐小时），与 Schlenker 与 Roberts（2009）建议的顺序相反；论文称在格点分辨率不粗的情形下顺序影响不大，并报告换序重做后结果几乎相同（第~820 页，Supplementary Table A6，本仓未收）。第二，温度以 degree-days 而非 temperature bins 或样条进入模型。论文承认近期文献更偏好后两者，给出的三条理由是（第~820 页）：研究目的在于突出季节性影响与识别 long-run adaptation，不在于追求最高的预测力；样本量有限，高度灵活的设定结果会很敏感；climate penalty model 能否与 bins、样条设定配合尚不清楚，原句是 ``whether the model works with temperature bin and spline specifications is not immediately clear''\citep[第~820 页]{da2024climate}。
+
+Figure~1（第~821 页）报告 1981--2015 年的历史趋势：三季温度都呈上升趋势，Winter 与 Spring 尤为明显；降水年际波动大，没有显著趋势（第~820 页）。温度有趋势这一点直接关系到 climate penalty model 的 stationarity 条件，见下文「模型设定与识别策略」一节。
+
+\begin{pitfall}[变量单位：10 degree-days 与 100 mm]
+\label{pit:da-units}
+读 Table~2 的系数之前先确认单位。degree-days 变量以 10 degree-days 为单位（第~822 页的描述统计注明 ``in the unit of 10 degree-days''\citep[第~822 页]{da2024climate}），降水以 100~mm 为单位（Table~2 表注，第~829 页）。因此系数 $-0.114$ 的读法是「多 10 个 degree-days，对数单产下降 0.114」，不是「多 1 个 degree-day」。另一处口径差异同样影响跨研究比较：由逐小时温度构造的 degree-days 明显大于由日均温度构造的同名变量。以 Fall 高于上阈值的 degree-days 为例，逐小时口径的最大值与均值分别是 2.5 与 0.5（单位为 10 degree-days），日均温度口径只有 0.9 与 0.01（第~822--823 页）。日均温度把一天之内短暂越过阈值的高温小时平均掉了，所以两种口径下的系数不能直接比较大小。
+\end{pitfall}
+
+\section{温度阈值的估计}
+
+构造 degree-days 需要先定温度阈值与时间区间。既有冬小麦研究多用 0\,$^\circ$C 作阈值、在整个生育期上累积，且不少研究没有纳入 0\,$^\circ$C 以下的 freezing 影响（第~821 页）。论文分三步自己定阈值。
+
+\textbf{Step 1：季节划分。}把生育期（10 月至次年 5 月）分成三段：Fall（10--11 月）、Winter（12 月至次年 2 月）、Spring（3--5 月）（第~821 页）。
+
+\textbf{Step 2：变量构造。}Fall 与 Spring 各构造四个温度变量（第~821--822、825 页）：\index{freezing degree-days}freezing degree-days（冰冻度日，记作 $\mathrm{Frez}$），累积 0\,$^\circ$C 以下的部分；$\mathrm{DDlow}$，累积 0\,$^\circ$C 到下阈值之间的部分；$\mathrm{DDmed}$，累积下阈值到上阈值之间的部分；$\mathrm{DDhigh}$，累积上阈值以上的部分。Winter 的设置不同：下阈值限定在 0\,$^\circ$C 以下、上阈值限定在 0\,$^\circ$C 以上，只有三个变量（低于下阈值、两阈值之间、高于上阈值）。论文的理由是冬小麦在 Winter 休眠，``this temperature range reflects conditions where the wheat remains dormant but is not damaged''\citep[第~822 页]{da2024climate}，即两阈值之间是既不至于冻伤、也不至于打断休眠的温度区间。
+
+\begin{intuition}[四个变量之和是常数吗：degree-days 与 bins 的区别]
+读到「一个季节里四个温度变量把温度轴切成四段」时，一个自然的疑问是：四个变量之和是否对每个观测都相同，从而与 fixed effects 完全共线？答案取决于变量累积的是什么。
+
+若四个变量是 temperature bins，即各温度区间内的时间长度（天数或小时数），那么四者之和恒等于该季节的总时长，对所有县年都相同，四个变量与常数项完全共线。这正是 bins 设定必须省略一个参照区间的原因。
+
+若四个变量是 degree-days，累积的是温度超出区间下端的度数。按第~819 页的例子与第~825 页的变量定义，可以把构造写成（本讲义的推断：论文正文只说沿用 Schlenker 与 Roberts（2009）及 Tack、Barkley 与 Nalley（2015）的 piecewise linear 做法，没有给出公式）：对小时温度 $T_h$、下阈值 $L$、上阈值 $U$，
+\begin{align*}
+\mathrm{Frez} &= \tfrac{1}{24}\sum_h \max(0-T_h,\,0), &
+\mathrm{DDlow} &= \tfrac{1}{24}\sum_h \min\bigl(\max(T_h,0),\,L\bigr),\\
+\mathrm{DDmed} &= \tfrac{1}{24}\sum_h \min\bigl(\max(T_h-L,0),\,U-L\bigr), &
+\mathrm{DDhigh} &= \tfrac{1}{24}\sum_h \max(T_h-U,\,0).
+\end{align*}
+逐小时相加可得 $\mathrm{DDlow}+\mathrm{DDmed}+\mathrm{DDhigh}-\mathrm{Frez}=\tfrac{1}{24}\sum_h T_h$，即该季节的日均温度之和。它随县、随年变化，不是常数，所以四个变量可以同时进入回归。拿 Fall 的阈值（17 与 24\,$^\circ$C）验算一个小时：$T_h=30\,^\circ$C 时四项分别贡献 0、17、7、6 度小时，$17+7+6-0=30$。
+
+两点说明。第一，论文第~822 页描述这些变量时用了「天数」（the number of days、the count of days）的说法，与第~819、825 页的 degree-days 定义不一致；本讲义按 degree-days 理解，依据是第~819 页的构造示例、第~825 页的变量定义与第~822 页以 10 degree-days 为单位的描述统计。第二，避免完全共线是 degree-days 的一个性质，但不是论文选择 degree-days 的理由；论文自述的三条理由见上节（第~820 页）。
+\end{intuition}
+
+\textbf{Step 3：遍历阈值组合。}候选阈值从 1\,$^\circ$C 取到该季节观测到的最高温度；对每个季节单独做单产回归，遍历全部阈值组合（1--2\,$^\circ$C、1--3\,$^\circ$C、1--4\,$^\circ$C……），``pick the one that exhibits the best fit (the highest $R^2$)''\citep[第~821 页]{da2024climate}。选出的阈值见 Table~1（第~823 页）：Fall 为 17 与 24\,$^\circ$C，Winter 为 $-5$ 与 8\,$^\circ$C，Spring 为 25 与 30\,$^\circ$C。论文补充了两条稳定性说明：三个季节联合回归得到的阈值与分季节回归一致（第~822 页脚注~5）；Tack、Barkley 与 Nalley（2015）对阈值位置附加的限制对结果没有影响（第~822 页脚注~4）。
+
+这组阈值与 Tack、Barkley 与 Nalley（2015）在美国 Kansas 得到的阈值（Fall 10--17\,$^\circ$C、Winter 5--10\,$^\circ$C、Spring 18--34\,$^\circ$C）差别不小。论文给出三个可能原因（第~822 页）：生育期起点不同（论文 10 月，Kansas 9 月）；研究区域更大、位置偏北、春季气温更温和；Winter 的阈值设置方式不同。
+
+\begin{pitfall}[best fit 的准则是 $R^2$，阈值与系数出自同一批数据]
+拟合准则在正文里写明了，是回归的 $R^2$（第~821、822 页各出现一次），不必到附录里找。正文没有写明的是遍历所用回归的完整设定（是否含 county fixed effects 与时间趋势、是否含降水项），只说 ``doing a yield estimation with variables for each season separately''\citep[第~822 页]{da2024climate}；需要复现时应查在线附录与复现材料（待补）。
+
+本讲义的评注：阈值是在同一批数据上按样本内 $R^2$ 选出来的，随后又用于 Table~2 的主回归，而 Table~2 的标准误没有计入阈值搜索这一步带来的不确定性。论文用两种办法缓解这一担忧：换用其他阈值重做（第~832 页，Supplementary Figures A1、A2，本仓未收）与样本外交叉验证（第~830 页，见「结果与解释」一节）。引用 Table~2 的显著性时应记得这一层。
+\end{pitfall}
+
+\section{模型设定与识别策略}
+
+本节先写出 conventional fixed effects 面板，再写出 climate penalty model，然后按「要识别什么、靠什么 variation、依赖哪些 assumption」的顺序拆开。贯穿全章的例子是 Fall 高于 24\,$^\circ$C 的 degree-days（$\mathrm{DDhigh\_fall}$）与一个假想的县甲，县甲该变量的多年均值取 0.5（单位为 10 degree-days；0.5 是论文报告的全样本均值，第~822 页，把它当作县甲的均值是本讲义为举例所设）。
+
+\subsection{Conventional fixed effects 面板}
+
+论文先写出不含 penalty term 的面板设定（式 (1)，第~824 页）：
+\begin{equation}
+y_{it} = \delta_i + \alpha_1 t + \alpha_2 t^2 + \sum_{s} f_s\bigl(\mathbf{W}^s_{it};\boldsymbol{\beta}^s\bigr) + \eps_{it},
+\label{eq:da-fe}
+\end{equation}
+其中 $i$ 是县，$t$ 是年，$s$ 取 Fall、Winter、Spring；$y_{it}$ 是对数单产；$\delta_i$ 是 county fixed effects，吸收土壤质量等不随时间变化的县间差异；$t$ 与 $t^2$ 是线性与二次时间趋势，充当技术进步的代理变量（第~824 页）。标准误按 Conley（1999）构造以处理空间相关，距离截断为 100~km，核函数取 Bartlett 核（第~824 页脚注~6）。
+
+$f_s$ 是季节 $s$ 的 climate 变量组合。Fall 是（式 (1.a)，第~824 页）
+\begin{align}
+f_{\mathrm{fall}} ={}& \beta^{\mathrm{fall}}_1\,\mathrm{Frez\_fall}_{it} + \beta^{\mathrm{fall}}_2\,\mathrm{DDlow\_fall}_{it} + \beta^{\mathrm{fall}}_3\,\mathrm{DDmed\_fall}_{it} + \beta^{\mathrm{fall}}_4\,\mathrm{DDhigh\_fall}_{it} \notag\\
+&+ \beta^{\mathrm{fall}}_5\,\mathrm{Prec\_fall}_{it} + \beta^{\mathrm{fall}}_6\,(\mathrm{Prec\_fall}_{it})^2 ,
+\label{eq:da-fall}
+\end{align}
+Spring 与之同型（式 (1.c)），Winter 少一个 $\mathrm{Frez}$ 变量（式 (1.b)，第~825 页）。合计 17 个回归元：11 个 degree-days 变量、三季降水及其平方。每个 degree-days 变量线性进入，季节内的非线性由四段（Winter 三段）分段线性来承担；降水以二次型进入。
+
+这一设定里没有 year fixed effects，年际的共同变化只由二次时间趋势吸收。于是用来估计系数的 variation 是：各县的 weather 变量与对数单产相对于本县均值和共同二次趋势的偏离。某一年全区域同时受到的冲击若偏离这条平滑趋势（例如某年的价格或政策变化），不会被吸收。论文把换用其他时间效应的结果列为 robustness check（第~832 页，Supplementary Table A7，本仓未收）。
+
+\subsection{Climate penalty model}
+
+论文先说明为什么不用另外两条同样试图恢复 long-run response 的路线，即 long differences（Burke 与 Emerick，2016）与 \index{multistage model}multistage model（多阶段模型；Butler 与 Huybers，2013；Kolstad 与 Moore，2020）：``These approaches exploit cross-sectional variation and thus require a large number of counties to obtain reliable estimates''\citep[第~825 页]{da2024climate}。论文只有 352 个县，这是它选择 climate penalty model 的理由。
+
+用一个 weather 变量 $x_{it}$ 说明设定（式 (2)，第~826 页）：
+\begin{equation}
+y_{it} = \alpha_i + \beta_1 x_{it} + \beta_2\,(x_{it}-\mu_i)^2 + \eps_{it},
+\label{eq:da-penalty}
+\end{equation}
+其中 $\mu_i$ 是县 $i$ 的 climate，取该 weather 变量在样本期内的均值；$(x_{it}-\mu_i)^2$ 是 climate penalty 变量，即当年 weather 实现与本地 climate 之差的平方（第~826 页；原文式 (2) 把 $\mu_i$ 印作 $u_i$，随后的文字说明用 $\mu_i$，本讲义统一写 $\mu_i$）。预期 $\beta_2<0$：给定当年的 weather 实现，climate 离它更近的县单产更高。
+
+与 \chref{ch:merel-gammans-2021} 对照，有两点要先分清。第一，记号不同：这里的 $\beta_2$ 是 penalty 系数，对应该章式~\ref{eq:cca-dgp} 里的 $\beta_3$；这里没有 $x_{it}^2$ 项。第二，式~\ref{eq:da-penalty} 因此是该章「线性 long-run effect」的情形（Mérel 与 Gammans 的式 (3)），long-run response 被设为 $x$ 的线性函数。
+
+系数的读法论文写得很直接：``In the long-run scenario when actions can be gradually adapted to changes in climate, the penalty term will be gone. Consequently, $\beta_1$ will be the long-run marginal response to climate, whereas the short-run response is the combination of the long-run response and the climate penalty term''\citep[第~826 页]{da2024climate}。把这句话摊开算一遍。在县甲，$\mathrm{DDhigh\_fall}$ 从多年均值 $\mu=0.5$ 升到 $x=1.5$（多出 10 个 degree-days）：
+
+\begin{itemize}
+  \item 若这是 climate 本身的变化，县甲有足够时间调整，penalty 为零，对数单产的变化是 $\beta_1\times(1.5-0.5)=\beta_1$；
+  \item 若这只是某一年的 weather 实现，县甲的行动仍按 $\mu=0.5$ 安排，对数单产的变化是 $\beta_1\times1+\beta_2\times(1.5-0.5)^2=\beta_1+\beta_2$。
+\end{itemize}
+
+两者相差 $\beta_2(x-\mu)^2$。对 $x$ 求导，short-run 的 marginal effect 是 $\beta_1+2\beta_2(x-\mu_i)$（本讲义由式~\ref{eq:da-penalty} 推算），它随当年偏离的大小而变，没有一个固定的数值。论文的说法是 ``such `marginal' interpretation for short-run impacts is contingent on the actual weather realisation and the local climate''\citep[第~826 页]{da2024climate}，并因此提醒 Table~2 里读不出 short-run 的 marginal effect：``the marginal short-run impacts are not directly revealed in Table 2 (i.e. no such coefficients or combination of coefficients can be interpreted as so)''\citep[第~832 页]{da2024climate}。
+
+落到论文的变量上，以 $\mathrm{DDhigh\_fall}$ 为例，式~\ref{eq:da-fall} 中的 $\beta^{\mathrm{fall}}_4\,\mathrm{DDhigh\_fall}_{it}$ 换成（式 (3)，第~826 页）
+\begin{equation}
+\beta^{\mathrm{fall},1}_4\,\mathrm{DDhigh\_fall}_{it} + \beta^{\mathrm{fall},2}_4\,\bigl(\mathrm{DDhigh\_fall}_{it}-\overline{\mathrm{DDhigh\_fall}}_i\bigr)^2 ,
+\label{eq:da-ddhigh}
+\end{equation}
+其中 $\overline{\mathrm{DDhigh\_fall}}_i$ 是县 $i$ 在 1981--2015 年的均值。
+
+\begin{ident}[季节 degree-days 加 climate penalty：可整体搬用的设定]
+\begin{align*}
+\text{估计方程：}\quad & y_{it} = \delta_i + \alpha_1 t + \alpha_2 t^2 + \sum_k \bigl[\beta_{k}^{1} x_{k,it} + \beta_{k}^{2}(x_{k,it}-\bar{x}_{k,i})^2\bigr] \\
+ & \qquad\; + \text{其余 climate 变量（不加 penalty term）} + \eps_{it} \\
+\text{long-run marginal effect：}\quad & \beta_{k}^{1} \\
+\text{short-run marginal effect：}\quad & \beta_{k}^{1} + 2\beta_{k}^{2}(x_{k,it}-\bar{x}_{k,i})
+\end{align*}
+配套口径：$y_{it}$ 为对数单产；$x_k$ 为逐小时温度构造的季节 degree-days（单位 10 degree-days）；$\bar{x}_{k,i}$ 为县 $i$ 的样本期均值；county fixed effects 加二次时间趋势；Conley 标准误（100~km，Bartlett 核）。论文的主设定只对 $\mathrm{DDhigh\_fall}$ 与 $\mathrm{Frez\_spring}$ 两个变量加 penalty term（Table~2 第 2 列）。以上为本讲义按式 (1)--(3) 的整理，记号 $\beta_k^1$、$\beta_k^2$ 随论文式 (3)。
+\end{ident}
+
+\subsection{Identification 与所依赖的 assumption}
+
+要识别的对象有两个：long-run marginal effect $\beta_1$ 与 penalty 系数 $\beta_2$。identification 的逻辑与 \chref{ch:merel-gammans-2021} 的增广回归相同：两个县年若「对各自 climate 的偏离」相同，penalty 就相同；在这样的观测之间，weather 水平不同带来的产出差异描出 long-run response。$\beta_2$ 则由偏离平方不同的观测之间的产出差异识别。由此反推出三条 assumption（编号为本讲义所加；论文只明确讨论了第一条）。
+
+\textbf{A1（stationary climate）。}论文原话是 ``One such is the stationarity of historical climate (this does not imply that future climate will be the same as current climate)''\citep[第~826--827 页]{da2024climate}。它对应 \chref{ch:merel-gammans-2021} 的 Assumption~1：样本期内各县的 climate 不变，$\mu_i$ 才可以用样本均值代表，偏离 $(x_{it}-\mu_i)$ 才是「weather 相对已适应的 climate 的偏离」。若 climate 在样本期内有趋势，样本均值就落在期初与期末的 climate 之间，早年与晚年的偏离都被系统地量错，penalty 系数会混入趋势的影响。
+
+\begin{pitfall}[温度有趋势，为什么仍按 stationary climate 处理]
+Figure~1 显示三季温度都在上升（第~820--821 页），A1 看上去并不成立。论文的处理分两步（第~827 页）。先引 Mérel 与 Gammans（2021）的论点：只要 climate 趋势在各县 weather variation 中占的份额很小，variation 主要来自年际波动与横截面差异，climate penalty model 就近似按 stationary climate 的条件工作。再报告自己的计算：``trends in historical climate only account for 1 per cent to 5 per cent variation in locational weather variation''\citep[第~827 页]{da2024climate}。这一论点的来源见 \chref{ch:merel-gammans-2021} 对原文「Trends in Historical Climate」一节的讨论。
+
+份额的具体算法（对哪些变量、如何去趋势、1\% 到 5\% 分别对应哪个变量）写在论文的 Appendix A2，属在线补充材料，本仓未收，待补。本讲义的评注：正文报告的份额是「趋势占 weather variation 的比重」，它说明趋势对偏离平方的影响小，但没有直接检验 penalty 系数对去趋势与否是否敏感；读者若要搬用这一设定，宜把「先对 weather 变量去趋势再构造 penalty term」作为一项 robustness check。
+\end{pitfall}
+
+\textbf{A2（strict exogeneity）。}给定 county fixed effects 与时间趋势，各年的 weather 实现与误差项不相关。这是 \chref{ch:deschenes-greenstone-2007} 以来 panel approach 的共同前提；论文没有 year fixed effects，这条前提还要求偏离二次趋势的年度共同冲击与 weather 不相关。若不成立，$\beta_1$ 与 $\beta_2$ 都会吸收这些冲击的影响。
+
+\textbf{A3（函数形式）。}long-run response 对每个 degree-days 变量是线性的；penalty 是偏离的二次函数，正负偏离同等对待，且最低点恰在县均值 $\mu_i$。这是式~\ref{eq:da-penalty} 的设定本身。若真实的 long-run response 有曲率而回归里没有 $x^2$ 项，这部分曲率会被 penalty term 部分吸收，$\beta_2$ 就不再只度量 adaptation。\chref{ch:merel-gammans-2021} 的易错点~\ref{pit:cca-mu} 讨论的两条限制（只看距离不看方向、均值未必是 adaptation 对准的基准）在这里同样适用，对 $\mathrm{Frez\_spring}$ 这类以 0 为下界、分布不对称的变量尤其值得留意。
+
+\section{结果与解释}
+
+Table~2（第~829 页）有三列：第 1 列是 conventional 面板（式~\ref{eq:da-fe}），第 2 列只对 $\mathrm{DDhigh\_fall}$ 与 $\mathrm{Frez\_spring}$ 加 penalty term，第 3 列对全部 climate 变量加 penalty term。表~\ref{tab:da-table2} 摘出与两条主结论直接相关的行。
+
+\begin{table}[htbp]
+\centering\small
+\caption{Da 等（2024）Table~2 摘录（第~829 页）。被解释变量为对数单产；degree-days 变量以 10 degree-days 为单位；括号内为 Conley 标准误；$^{*}p<0.1$，$^{**}p<0.05$，$^{***}p<0.01$。第 1 列为 conventional 面板，第 2 列只对两个变量加 penalty term，第 3 列对全部 climate 变量加 penalty term；空格表示该列不含此项。三列的设定不同，同一行的系数含义不同，见正文。}
+\label{tab:da-table2}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & (1) & (2) & (3) \\
+\midrule
+$\mathrm{DDhigh\_fall}$ & $-0.114^{***}$ (0.027) & $-0.070^{**}$ (0.030) & $-0.081^{***}$ (0.024) \\
+$\mathrm{Frez\_spring}$ & $-0.113^{***}$ (0.021) & $-0.088^{***}$ (0.021) & $-0.078^{***}$ (0.017) \\
+$\mathrm{DDhigh\_spring}$ & $-0.015$ (0.030) & $-0.008$ (0.030) & $-0.009$ (0.050) \\
+\midrule
+$\mathrm{DDhigh\_fall\_penalty}$ & & $-0.065^{**}$ (0.029) & $-0.080^{***}$ (0.025) \\
+$\mathrm{Frez\_spring\_penalty}$ & & $-0.029^{*}$ (0.016) & $-0.025^{*}$ (0.013) \\
+$\mathrm{DDhigh\_spring\_penalty}$ & & & $0.116^{***}$ (0.029) \\
+$\mathrm{Prec\_fall\_penalty}$ & & & $0.100^{***}$ (0.023) \\
+$\mathrm{Prec\_winter\_penalty}$ & & & $0.125^{***}$ (0.028) \\
+$\mathrm{Prec\_spring\_penalty}$ & & & $-0.019^{*}$ (0.010) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{第 1 列：conventional panel approach}
+
+先看形状。论文事先的预期是 $\mathrm{DDmed}$ 促进生长，$\mathrm{Frez}$、$\mathrm{DDlow}$ 与 $\mathrm{DDhigh}$ 减产（第~827 页）；估计结果大体如此：三季的 $\mathrm{DDmed}$ 系数都为正且显著（Fall 0.022、Winter 0.017、Spring 0.037），区间之外偏冷与偏热两侧的系数为负（Table~2 第 1 列与 Figure~2，第~828--829 页）。
+
+再看量级。两个最大的减产来源是 Fall 的高温与 Spring 的 freezing（第~827 页）：Fall 高于 24\,$^\circ$C 的 degree-days 每多 10 个，单产下降 11.4\%；Spring 的 freezing degree-days 每多 10 个，单产下降 11.3\%。这两个百分数是把对数点系数 $-0.114$ 与 $-0.113$ 直接读成百分比的近似；按 $e^{-0.114}-1$ 精确换算是 $-10.8\%$（本讲义推算）。Winter 两侧的系数都为负，其中低于 $-5\,^\circ$C 一侧不显著（$-0.008$，标准误 0.006），高于 8\,$^\circ$C 一侧显著（$-0.019$，标准误 0.008）。
+
+Spring 的高温（高于 30\,$^\circ$C）没有显著的减产效应（$-0.015$，标准误 0.030），这与 Tack、Barkley 与 Nalley（2015）发现春季高温减产最大的结论相反。论文列出的可能解释有：地理条件、品种、生育期与管理方式的差异；高温出现的频率不同（高于 34\,$^\circ$C 的温度在 Tack 等的样本里出现于 75\% 以上的观测，在论文样本里只出现于 39\% 的观测）；以及灌溉可能使 Spring 高温的估计有偏，论文没有分作物的灌溉数据，只能用 robustness check 间接处理（第~828 页）。
+
+降水呈倒 U 形（第~828--829 页）：转折点在 Fall 为 134.6~mm、Spring 为 188.3~mm，而两季的平均降水分别是 62.0~mm 与 159.1~mm，Fall 明显缺水，Spring 次之。转折点可以由 Table~2 验算：Fall 的一次项与二次项系数是 0.070 与 $-0.026$（单位 100~mm），$0.070/(2\times0.026)=1.346$，即 134.6~mm。
+
+这些系数该当作什么来读？论文在两处有两种说法。讨论模型时说 fixed effects 面板 ``tend to reflect the effects of short-run weather shocks (year-to-year weather fluctuations) on the outcomes''\citep[第~823 页]{da2024climate}；总结结果时说 ``conventional fixed effects panel models tend to reveal climatic effects that lie between short-run and long-run estimates identified from the climate penalty model, although this finding is more evident in scenarios with higher temperature increases''\citep[第~818 页]{da2024climate}。本讲义的评注：按 \chref{ch:merel-gammans-2021} 的偏差分解，后一种说法更准确，而且可以说得更具体。若 DGP 是式~\ref{eq:da-penalty}，漏掉 penalty term 的线性面板系数收敛到 long-run marginal effect $\beta_1$ 加一项偏差，偏差等于 $\beta_2$ 乘以各县 weather 三阶中心矩之和与方差之和的比（该章式~\ref{eq:cca-biaslinear}）。也就是说，第 1 列的系数应读作「带偏差的 long-run marginal effect」：它瞄准的是 $\beta_1$，而不是某个 short-run 效应；weather 分布对称时偏差为零，右偏且 $\beta_2<0$ 时系数比 $\beta_1$ 更负。第 2 列正好可以对照这一点。
+
+\subsection{第 2、3 列：加入 climate penalty term}
+
+\textbf{第 2 列。}两个 penalty 系数都为负，符合预期：$\mathrm{DDhigh\_fall\_penalty}$ 为 $-0.065$（标准误 0.029），$\mathrm{Frez\_spring\_penalty}$ 为 $-0.029$（标准误 0.016，只在 10\% 水平显著）。long-run 边际损害比第 1 列小（第~832 页）：Fall 高温每 10 个 degree-days 的减产从 11.4\% 降到 7.0\%，Spring freezing 从 11.3\% 降到 8.8\%。
+
+把县甲的例子跟到底。县甲 $\mathrm{DDhigh\_fall}$ 的多年均值是 0.5，某年实现为 1.5。按第 2 列的系数（以下为本讲义推算）：long-run 部分是 $-0.070\times1=-0.070$，penalty 是 $-0.065\times1^2=-0.065$，这一年相对正常年份的对数单产变化是 $-0.135$，约合 $-12.6\%$。另设县乙的多年均值就是 1.5，同样的 weather 对县乙没有 penalty；两县在这一年因 adaptation 状态不同而产生的差距是 0.065 个对数点。再看偏离的大小如何改变结论：若县甲只偏离 0.5 个单位，penalty 是 $-0.065\times0.25=-0.016$，只有 long-run 部分 $-0.035$ 的一半不到；偏离 2 个单位时 penalty 是 $-0.26$，已超过 long-run 部分 $-0.14$。penalty 随偏离的平方增长，这一点在下文的 projection 里起决定作用。
+
+第 1 列的 $-0.114$ 落在 long-run 的 $-0.070$ 与「偏离 1 个单位时的 short-run 变化」$-0.135$ 之间，方向上与上一小节的读法一致：$\beta_2<0$，而 $\mathrm{DDhigh\_fall}$ 以 0 为下界、均值 0.5、最大值 2.5（第~822 页），县内分布很可能右偏，偏差为负。这只是方向上的对照（本讲义的引申）：论文没有报告县内 weather 分布的 skewness，回归里还有其他 16 个回归元，单变量的偏差公式不能用来精确还原 $-0.114$。
+
+\textbf{第 3 列。}对全部 climate 变量加 penalty term 后出现了反常结果。论文指出：新增的 penalty 系数大多不显著，而 ``two out of three precipitation penalty coefficients are positive, implying that if a location has a normal climate far from a given weather realisation, it systematically performs better under that weather, which seems counterintuitive''\citep[第~832 页]{da2024climate}。论文的解释是回归元多且相关带来的问题：降水的二次项与二次的 penalty term 容易共线，样本中降水的横截面 variation 较小时尤其如此（第~832 页）。据此论文在 projection 中只用第 2 列的估计，并明说用全部 penalty term 做 projection 不可靠（第~832 页）。
+
+这一解释可以算给读者看。把 penalty term 展开：$(x_{it}-\mu_i)^2=x_{it}^2-2\mu_i x_{it}+\mu_i^2$。回归里已经有 $x_{it}$、$x_{it}^2$ 与 county fixed effects（吸收 $\mu_i^2$），penalty term 中唯一不能被它们线性表出的部分是 $-2\mu_i x_{it}$ 里 $\mu_i$ 随县变化的那一份。若各县的 $\mu_i$ 都接近同一个值 $\bar\mu$，则 $(x_{it}-\mu_i)^2\approx x_{it}^2-2\bar\mu x_{it}+\text{常数}$，penalty term 与已有回归元近似共线，其系数由很少的信息决定，符号与大小都不稳定。这与 \chref{ch:merel-gammans-2021} 的结论是同一件事：二次设定下，penalty 与 long-run 曲率能否分开，取决于横截面 climatic differences 相对县内 weather variation 有多大。degree-days 变量在式~\ref{eq:da-fe} 里没有平方项，所以这一问题在降水上最突出。
+
+本讲义的评注，另有两处读表时可见而论文正文没有讨论的地方。其一，第 3 列的反常符号不限于降水：$\mathrm{DDhigh\_spring\_penalty}$ 为 0.116 且在 1\% 水平显著（表~\ref{tab:da-table2}），同样是「climate 离当年 weather 越远、单产越高」的方向。其二，第 3 列 $\mathrm{Prec\_spring}$ 平方项与 $\mathrm{Prec\_spring\_penalty}$ 的系数和标准误在表中完全相同（均为 $-0.019$，标准误 0.010，第~829 页）。两者都提示第 3 列不宜逐项解读。由此带来一个引用时要交代的事实：主设定保留的两个 penalty term，正是符号符合预期的两个；论文的选取理由是这两个变量减产效应最大、最值得考察 adaptation（第~832 页）。
 
 \subsection{Robustness check}
 
-\subsection{Projecting}
-包含 5.4 和5.5 部分。
+\textbf{样本外交叉验证（第~829--830 页，Figure~3）。}论文把自己的温度设定与四种常见设定比较：全生育期均温与总降水的二次型（Simple tavg）、分季节均温与降水的二次型（Seasonal tavg）、以 0\,$^\circ$C 为阈值的全生育期 degree-days（Simple dd）、以 0\,$^\circ$C 为阈值的分季节 degree-days（Seasonal dd）。做法是从 35 年中随机抽 28 年估计模型，预测其余 7 年的单产，以 RMSE 为准则，重复 1{,}000 次取平均；按年而不是按观测抽样，是因为同一年内各县单产空间相关（第~830 页脚注~8）。结果是论文的设定 RMSE 最低，但作者自己加了限定：``although the margins are small for certain cases''\citep[第~830 页]{da2024climate}。一处小的不一致：原文称留出的 7 年占样本的 15\%，按 $7/35$ 计算应为 20\%（本讲义的评注）。
+
+\textbf{其余各组（第~830--832 页；结果表均在在线附录，本仓未收，以下只转述正文的结论）。}其一，灌溉：加入灌溉变量（有效灌溉面积与总播种面积之比）、剔除文献认定的高强度灌溉地区，climate 变量的估计几乎不变，Spring 高温仍不显著；论文同时承认不能完全排除灌溉的混淆（第~831 页）。其二，霜冻与积雪：仿 Schmitt 等（2022）构造 black frost 变量并加入积雪深度，degree-days 与降水的估计保持一致；主分析不用积雪变量的原因之一是样本中 Winter 与早春分别有近 95\% 与 98\% 的观测积雪深度为 0（第~831 页）。其三，加入风速、比湿、短波与长波辐射，degree-days 与降水的效应没有显著变化（第~831 页）。其四，换阈值、扩大地理范围、换时间效应、换标准误，论文称结果稳健（第~832 页）。
+
+\subsection{Projection：freezing 变量与 adaptation 各自改变了什么}
+
+论文的 5.4 与 5.5 两小节用同一套 projection 回答两个问题。口径如下（第~833 页）：五个 climate 模型（ACCESS-CM2、BCC-CSM2-MR、CMCC-ESM2、HadGEM3-GC31-LL、IPSL-CM6A-LR），两个情景（SSP245 与 SSP585），两个时段（2041--2060 与 2081--2100）；未来的月度温度与降水取自 WorldClim 的降尺度、偏差订正数据，先算相对 1970--2000 年模式历史值的变化，再把变化加到论文的逐小时温度与月度降水上，重新计算 climate 变量；生育期假定不变（10 月至次年 5 月）；系数用 Table~2 第 2 列的 long-run 估计。projection 主要只用 degree-days 变量，理由是降水的未来变化分歧更大，且文献显示降水在作物单产的 projection 中不如温度重要（第~833 页）。
+
+\textbf{问题一：freezing 变量的作用（5.4 小节，Figure~4）。}变暖同时带来两件方向相反的事：Fall 的高温 degree-days 增加，Spring 的 freezing degree-days 减少。论文比较两套 projection：使用全部 degree-days 变量的，与去掉三个刻画低温的变量（$\mathrm{Frez\_fall}$、$\mathrm{DDlow\_winter}$、$\mathrm{Frez\_spring}$）的。以 SSP245、2041--2060 为例，不计 freezing 时平均减产 12.5\%，计入时反而略增产 2.3\%（第~833--834 页）；全部情景合起来，不计 freezing 时减产 12.5\% 到 48.2\%，计入时增产 1.9\% 到 2.5\%（第~817、837 页）。论文还把不计 freezing 的结果与既有研究对照：换算成每升温 1\,$^\circ$C 的口径后，论文是减产 3.5\% 到 7.1\%，Asseng 等（2015）用 30 个作物模拟模型得到的全球数字是 6\%，而那 30 个模型里只有 7 个利用了 freezing 信息（第~834 页及脚注~10）。
+
+\textbf{问题二：adaptation 的作用（5.5 小节，Figure~5）。}论文再用 short-run 估计做一套 projection，与 long-run 的对比，两者之差就是 adaptation effect：``Here we see that adaptation effects are substantial and can even reverse the sign''\citep[第~835 页]{da2024climate}。具体数字：long-run 口径下多数情景为小幅增产 1.9\% 到 2.5\%，short-run 口径下为减产 7.1\% 到 44.8\%（第~835 页）。用 conventional 面板系数做的 projection 大体落在两者之间，升温幅度越大的情景越明显；论文认为这呼应了 Mérel 与 Gammans（2021）「conventional 面板系数是 short-run 与 long-run response 的加权平均」的论点（第~835--836 页）。由此引出一条对 long differences 路线的评论：拿 long differences 估计与 conventional 面板估计之差当作 adaptation 的做法，``might underestimate the adaptation effects to a certain extent''\citep[第~836 页]{da2024climate}，因为被当作 short-run 基准的 conventional 估计本身已含 long-run 成分。
+
+\begin{pitfall}[adaptation effect 的大小主要由二次 penalty 在大幅偏离处的取值决定]
+本讲义的评注。按式~\ref{eq:da-penalty}，long-run 与 short-run projection 之差就是 penalty term 在未来偏离处的取值 $\beta_2(x^{\text{未来}}-\mu_i)^2$。它随偏离的平方增长：上文县甲的例子里，偏离 1 个单位时 penalty 是 $-0.065$，偏离 2 个单位时是 $-0.26$。升温幅度大的情景下 short-run 减产很大、与 long-run 的差距也大，在很大程度上是二次函数形式的直接结果。而 $\beta_2$ 是由历史上各县对自身均值的年际偏离估计出来的，这些偏离的幅度远小于世纪末情景下的变化，projection 用到的是函数形式的外推。
+
+因此引用「adaptation 可以逆转影响的符号」这一结论时应同时交代三点：它依赖二次 penalty 在样本外大幅偏离处仍然成立；short-run projection 的具体算法（是否逐县按偏离计算、是否计入变率的变化）写在 Appendix A1，本仓未收，待补；论文自己也提醒，这样估计出来的 adaptation ``are always estimated from historical data and thus entail historical adaptive actions''\citep[第~836 页]{da2024climate}，未来的 adaptation 可能与历史不同。
+\end{pitfall}
+
+\section{局限与批评}
+
+论文自己承认的（第~837 页，另见第~836 页）：其一，数据不支持对灌溉做更细的分析，robustness check 显示影响很小，但不能完全排除其混淆；其二，这一框架只能给出 adaptation 的总效应，``the climate penalty framework can only uncover the overall adaptation effects, whereas the effects of specific adaptation strategies cannot be estimated''\citep[第~837 页]{da2024climate}；其三，样条等更灵活的温度设定如何与 long-run adaptation 的估计结合，仍是未解决的问题；其四，adaptation 由历史数据估计，未来的 adaptation 可能不同（第~836 页）。
+
+后续文献的批评与发展本讲义未读，待补写。
+
+本讲义的评注（汇总前文各处）：其一，阈值由样本内 $R^2$ 选出后用于主回归，标准误未计入这一步；其二，主设定没有 year fixed effects，identification 依赖偏离二次趋势的年度共同冲击与 weather 不相关；其三，温度有上升趋势，stationary climate 靠「趋势份额 1\% 到 5\%」支撑，penalty 系数对去趋势是否敏感正文未报告；其四，penalty term 全部加入时出现多个反常符号，主设定保留的是符号符合预期的两个；其五，「adaptation 逆转符号」的量级依赖二次 penalty 的外推。这五条都不否定论文的两条主结论，但决定了它们能被引用到什么程度：freezing 变量改变 projection 符号这一条只依赖 long-run 系数与变量构造，比 adaptation 的量级那一条更稳固。
+
+\section{在本领域脉络中的位置}
+
+论文回答的旧问题有两个：冬小麦的 climate 影响评估是否必须分季节并纳入 freezing（答案：是，否则 projection 的符号相反）；\chref{ch:merel-gammans-2021} 的 climate penalty model 能否搬到美国与法国之外的作物面板上（答案：可以，但只有两个 penalty term 得到符合预期的估计）。它用的路线：变量构造沿 Schlenker 与 Roberts（2009）及 Tack、Barkley 与 Nalley（2015）的 piecewise linear degree-days；估计框架是 Mérel 与 Gammans（2021）的线性 long-run 情形；identification 的前提上承 \chref{ch:deschenes-greenstone-2007} 的 panel approach。它留下的新问题：penalty term 在高维、相关的回归元下如何选取；bins 与样条设定下如何定义和估计 penalty（论文自己列为开放问题，第~837 页）；短面板、有趋势的 climate 下 stationarity 条件如何检验。本章在 \chref{ch:info-climate-change-adaptation} 的方法线（panel 线）、发现线与速查表中均有登记。
+
+% 体例备注（2026-11-19）：「机制与讨论」按体例属视需要小节。论文的机制内容
+% （adaptation 的可能渠道，第 835 页引品种更替、生育期调整等文献）篇幅很短，
+% 已并入「Projection」小节与「局限与批评」，不另设。
+
+% 章末参考文献（只列本章引用的条目），勿删
+\chapterrefs

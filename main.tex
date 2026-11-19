@@ -25,7 +25,9 @@
 \bibliographyunit[\chapter]
 
 \frontmatter
-\maketitle
+% 封面：人大红色块 + bjr 标识（宏在 preamble.tex「封面与 bjr 标识」）；
+% 要回到 ctexbook 默认扉页，把下一行换回 \maketitle 即可
+\bjrcover
 \tableofcontents
 
 \mainmatter
@@ -39,10 +41,17 @@
 \label{part:cca}
 
 \include{part/climate-change-adaptation/partinfo}
+% ---- 方法篇：讲 research design 与 identification 的各章 ----
 \include{part/climate-change-adaptation/economic-impacts-of-climate-change}
 \include{part/climate-change-adaptation/global-non-linear-effect-of-temperature}
 \include{part/climate-change-adaptation/climate-econometrics}
 \include{part/climate-change-adaptation/climate-penality-augmented-panel}
+% ---- 应用篇：把上面的方法用到具体作物／地区的各章，排在方法篇之后，
+%      按 \include 顺序编号 Application 1、2……（每个 part 各自从 1 起）。
+%      编号不进章题（章题＝论文标题），写在四处：\chapter 的可选参数（目录条目）、
+%      \chaptermark（页眉）、该章「它在 partinfo 里的坐标」一句、partinfo 速查表。
+%      调整顺序或插入新的应用篇时，这四处的编号要一起改。 ----
+\include{part/climate-change-adaptation/winter-wheat-yields}                     % Application 1
 
 % 书末总参考文献：先关闭按章分单元（bibunits 手册 §3.3），
 % globalcitecopy 选项已把各章引用汇入此表

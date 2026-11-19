@@ -6,10 +6,23 @@
 # 与 terms.txt 的分界（暂定）：terms 记概念，expression 记论证构件。
 # 拿不准先登记进较合适的一份并加行尾 ? 标记，规则定稿时统一归类；
 # 不要因为分界拿不准就不登记。
+# 2026-11-19 整理：补齐头注所举而未登记的表达与各章已在用的表达；
+# convex combination、data-generating process 改只登记在 terms.txt。
+# 同日补登 counterfactual、marginal effect、variation 三条（主笔意见），正文随之改用英文原词。
 assumption	假设	模型前提，逐条编号陈述，并讨论不成立时系数被解释成什么
 identification strategy	识别策略	声称的因果结论所依赖的变异来源与前提
-reduced form	简化式	不显式建模决策过程的回归设定 ?
-convex combination	凸组合	权重非负且和为一的加权平均，用于陈述估计量的构成 ?
-data-generating process	数据生成过程	陈述 DGP 假设时用，缩写 DGP
-
+identification assumption	识别假设	使估计量一致所需的条件，通常写成误差项与回归元的条件期望为零
+exact identification	恰好识别	Hsiang 2016 §2.4 的用法：在所列条件下 weather 变异恰好识别 climate 效应 ?
+research design	研究设计	用哪一种比较来近似理想实验（cross-section、time-series、long differences）
+estimand	待估对象	先于估计方法写明要估计的总体量
+reduced form	简化式	不显式建模决策过程、只含可观测变量的设定 ?
 proposition	命题	被多项研究谨慎承认（cautiously acknowledged）、尚待形式化的领域论断（随 Mérel & Gammans 2021 用法）?
+hypothesis	假说	可由数据检验的论断，区别于作为前提的 assumption
+endogeneity concern	内生性担忧	指出回归元可能与误差项相关时用，须说明来源（遗漏变量、测量误差、反向因果）
+robustness check	稳健性检验	换设定、样本、口径重估，逐组报告结论是否保持
+caveat	保留意见	作者对结论适用范围的自我限定，转述时须连同方向（高估或低估）一并交代
+downward bias	向下偏	偏差方向的陈述；须写明相对哪个目标参数（如 Deschênes & Greenstone 2007 相对 long-run effect）
+statistically indistinguishable from zero	统计上不异于零	报告不显著结果时用；不等于「影响为零」
+counterfactual	反事实	假设 climate 取另一状态时结果会如何的推演；须写明比较的两个状态与口径（short-run 或 long-run、单点或加总）
+marginal effect	边际效应	回归元变动一个单位时结果的变化；非线性设定下随评价点而变，引用须写明评价点
+variation	变异	identification 所用的数据差异来源（横截面、组内、时间序列）；引用识别结论前先分清来源

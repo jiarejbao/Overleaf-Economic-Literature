@@ -13,3 +13,5 @@
 *.toc
 *.xdv
 build/
+
+papers/

@@ -6,41 +6,80 @@
 # 与 expression.txt 的分界（暂定）：terms 记概念，expression 记论证构件。
 # 拿不准先登记进较合适的一份并加行尾 ? 标记，规则定稿时统一归类；
 # 不要因为分界拿不准就不登记。
-identification
-specification
+# 2026-11-19 整理：按主题分块（块间空行，块首一行 # 注释）；补齐各章已打 \index
+# 而未登记的词条与此前只有英文原词的空行；同一词只登记在一份表里
+# （convex combination、data-generating process 原在两表各有一行，现只留本表）。
+# 未登记、正文仍用中文的常用词（响应、标准误、聚类等）不受「正文用英文原词」约束；
+# 若要改用英文，先在此或 expression.txt 登记（variation、counterfactual、
+# marginal effect 三条已于同日登记在 expression.txt）。
 
+# —— weather 与 climate ——
+weather	天气	年际与年内的波动；形式化为刻画某时段内已实现状态的经验分布的向量 c（随 Hsiang 2016）
+climate	气候	weather 的长期分布；形式化为刻画该分布的参数向量 C（随 Hsiang 2016）
+weather fluctuation	天气波动	weather 相对其长期均值的年际波动
+climatic differences	气候差异	location 之间 climate（长期分布）的差异
+climate change	气候变化	climate 本身（长期分布）的变化，区别于某一年的 weather 实现
+climate normals	气候常年值	climate 变量的多年平均值（Deschênes & Greenstone 2007 的用词）
+location	位置	面板的横截面单位所在地（县、省、国家）；形容词 locational
+growing season	生长季	作物从播种到收获的时期；各研究取的月份不同，引用时须写明
+degree-days	度日	作物累积热量暴露的度量：温度超出基点的度数按日累积（术语来自农学与气象学；又称生长度日）
+freezing degree-days	冰冻度日	低于 0°C 部分的度日累积（Da et al. 2024 的 Frez 变量）
+temperature bins	温度区间变量	各温度区间内的时间长度（天数或小时数），与 degree-days 的累积对象不同
+dose-response function	剂量—反应函数	E[Y|c]=f(c)，结果对 climate 变量取值的函数关系（随 Hsiang 2016）
+
+# —— adaptation 与两种 response ——
 adaptation	适应	长期发生的调整（品种、灌溉、种植制度等）
 coping	应对	短期风险管理（借贷、储蓄、转移）
-weather	天气	年际与年内的波动
-climate	气候	天气的长期分布
-weather fluctuation	天气波动	天气相对其长期均值的年际波动
-climatic differences	气候差异	位置之间气候（长期分布）的差异
-climatic adaptation	气候适应	对本地气候的长期适应
-panel approach	面板法	天气波动面板设计的统称（随 Mérel & Gammans 2021）
-nonlinear panel approach	非线性面板法	天气变量以非线性形式（二次、样条等）进入的面板法
-quadratic-in-weather model
-
-fixed effects	固定效应
-county fixed effects	县固定效应	县级面板的个体固定效应
-climate penalty	气候惩罚	天气偏离本地气候造成的产出惩罚（随 Mérel & Gammans 2021 用法）
-penalty term	惩罚项	二次设定中的 β3(x_it−μ_i)^2 项
-long differences	长差分	两个长时段均值之差（随 Burke & Emerick 2016）
-short-run response	短期响应	行动集固定为适应于本地气候时，产出对天气实现的依赖
-long-run response	长期响应	全部行动可调整、惩罚为零时，产出对天气的依赖
-Ricardian model	Ricardian 模型	用横截面价值对气候变量回归的截面路线
-asymptotic bias	渐近偏差	T→∞ 时估计量相对目标参数的偏差
-
-skewness	偏度	条件于 location 的 weather 分布的不对称性，决定面板估计偏差的方向
-cross-sectional approach	截面法	同一时期比较不同 location 的研究设计（随 Hsiang 2016 三分法）
-omitted variables bias	遗漏变量偏差	遗漏与 climate 相关的产出决定因素造成的估计偏差
+climatic adaptation	气候适应	对本地 climate 的长期适应
+long-run adaptation	长期适应	climate 变化之后主体完成的全部再调整；在数据里只体现于跨 location 的 climatic differences
+adaptation effect	适应效应	long-run 与 short-run 口径下影响之差（Da et al. 2024 的 projection 用法）
+committed actions	既定行动	按本地 climate 安排、不随逐年 weather 调整的行动（随 Mérel & Gammans 2021）
+economic substitution	经济替代	换作物、改用途等调整；Deschênes & Greenstone 2007 以 all economic substitutions 界定 long-run effect
 direct effect	直接效应	climate 经由 weather 实现对产出的直接影响（随 Hsiang 2016）
-belief effect	信念效应	主体因相信本地气候如此而调整行为带来的影响（随 Hsiang 2016）
+belief effect	信念效应	主体因相信本地 climate 如此而调整行为带来的影响（随 Hsiang 2016）
+short-run response	短期响应	行动集固定为适应于本地 climate 时，产出对 weather 实现的依赖
+long-run response	长期响应	全部行动可调整、penalty 为零时，产出对 weather 的依赖
+climate penalty	气候惩罚	weather 偏离本地 climate 造成的产出惩罚（随 Mérel & Gammans 2021 用法）
+penalty term	惩罚项	二次设定中的 β3(x_it−μ_i)^2 项
+climate penalty model	气候惩罚模型	含 penalty term 的面板设定（Mérel & Gammans 2021 的式 (1)；此名见 Da et al. 2024）
+
+# —— 研究设计与方法 ——
+cross-sectional approach	截面法	同一时期比较不同 location 的研究设计（随 Hsiang 2016 三分法）
+Ricardian model	Ricardian 模型	用横截面农地价值对 climate 变量回归的截面路线（Mendelsohn, Nordhaus & Shaw 1994）
+hedonic approach	特征价格法	Deschênes & Greenstone 2007 对农地价值截面回归的称呼，即 Ricardian 路线
+production function approach	生产函数法	估计 weather 对具体作物单产影响的路线，不容许 adaptation（随 Deschênes & Greenstone 2007）
+panel approach	面板法	weather 波动面板设计的统称（随 Mérel & Gammans 2021）
+nonlinear panel approach	非线性面板法	weather 变量以非线性形式（二次、样条等）进入的面板法
+quadratic-in-weather model	天气二次模型	weather 以一次项与二次项进入的面板设定（Mérel & Gammans 2021 的 quadratic-in-weather specification）
+naive model	朴素模型	漏掉 penalty term 的面板设定（随 Mérel & Gammans 2021）；Da et al. 2024 称 conventional panel model
+conventional panel model	常规面板模型	不含 penalty term 的 fixed effects 面板（Da et al. 2024 的称呼），同 naive model
+hybrid estimator	混合估计量	全局平方项与组内平方项并设的估计量（McIntosh & Schlenker 2006），climate penalty 增广回归的前身
+long differences	长差分	两个长时段均值之差（随 Burke & Emerick 2016）；不写「长期差分」
+multistage model	多阶段模型	借助横截面变异恢复 long-run response 的另一路线（Butler & Huybers 2013；Kolstad & Moore 2020；本讲义未读，界定待补）
+projection	情景推算	把估计的响应函数代入 climate 情景算出的未来影响；不等于对未来的无条件预测 ?
+damage function	损害函数	把全球温度变化映射为经济损失的函数（Burke, Hsiang & Miguel 2015 与 IAM 文献）
+
+# —— 计量概念 ——
+identification	识别	待估对象能否由数据的某种变异唯一确定；作名词用英文，动词「识别」仍用中文
+specification	设定	回归方程的函数形式、控制变量与 fixed effects 的具体选择
+data-generating process	数据生成过程	产出如何由 weather、climate 与 adaptation 行为生成的设定，缩写 DGP ?
+fixed effects	固定效应	吸收某一层级上不随其他维度变化的不可观测因素的一组虚拟变量
+county fixed effects	县固定效应	县级面板的个体固定效应
+state-by-year fixed effects	州×年固定效应	吸收州内各县当年共同冲击的固定效应（正文写作 state×year fixed effects）
+within estimator	组内估计量	用组内去均值变异做 OLS 的 fixed effects 估计量
+omitted variables bias	遗漏变量偏差	遗漏与回归元相关的产出决定因素造成的估计偏差
+measurement error	测量误差	回归元的观测值与真值之差
+attenuation bias	衰减偏误	回归元的 measurement error 使系数向零偏
+asymptotic bias	渐近偏差	T→∞ 时估计量相对目标参数的偏差
+skewness	偏度	条件于 location 的 weather 分布的不对称性；线性情形下决定面板估计偏差的方向
+convex combination	凸组合	权重非负且和为一的加权平均，用于陈述估计量的构成 ?
+weight parameter	权重参数	面板估计中 short-run 与 long-run response 的组合权重 θ 与 λ_i（随 Mérel & Gammans 2021）
+superconsistency	超一致收敛	climate 有趋势时 naive 估计量相对 long-run 参数的偏差随 T→∞ 消失（随 Mérel & Gammans 2021）
+stationarity	平稳性	观测期内各 location 的 climate 不变（Mérel & Gammans 2021 的 Assumption 1）；形容词 stationary
+strong exogeneity	强外生性	误差项与各期 weather 实现均不相关（又称 strict exogeneity）
+preferred estimate	首选估计	作者在多个设定中认定最可信、用来报告主结论的估计 ?
+unit homogeneity	单位同质	不同单元在相同 climate 与协变量下期望结果相同（随 Hsiang 2016）
 marginal treatment comparability	边际处理可比性	weather 的边际变化与 climate 的边际变化效应相同的假设（随 Hsiang 2016）
 frequency-identification tradeoff	频率—识别权衡	低频变异能捕捉 adaptation 但识别可信度下降的权衡（随 Hsiang 2016）
-weight parameter	权重参数	面板估计中 short-run 与 long-run response 的组合权重 θ 与 λ_i（随 Mérel & Gammans 2021）
-superconsistency	超一致收敛	估计量以更快速度收敛到真值；naive 面板参数随 T→∞ 对 long-run 参数超一致（随 Mérel & Gammans 2021）
-within estimator	组内估计量	用组内去均值变异做 OLS 的固定效应估计量
-
-data-generating process
-convex combination
-preferred estimate
+envelope theorem	包络定理	最优值函数对参数的导数等于目标函数在最优点处对该参数的偏导数（微观经济学）
+gradient theorem	梯度定理	梯度沿路径的线积分等于路径两端函数值之差（多元微积分）
